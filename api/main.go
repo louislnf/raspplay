@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -51,6 +52,35 @@ func SetPiPlayerMediaSource(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, fmt.Sprintf("Set media source to %s\n", r.PostFormValue("source")))
 }
 
+type Media struct {
+	Id   int
+	Name string
+	Path string
+}
+
+var sampleMediaSourceTable = []Media{
+	{
+		Id:   1,
+		Name: "CV Video",
+		Path: "/home/pi/Videos/IMG_1423.mov",
+	},
+	{
+		Id:   2,
+		Name: "Jellyfish",
+		Path: "/home/pi/Videos/jellyfish.mp4",
+	},
+	{
+		Id:   3,
+		Name: "Weird Clip",
+		Path: "/home/pi/Videos/sample_video.avi",
+	},
+}
+
 func GetPiPlayerMediaSources(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "hello\n")
+	m, err := json.Marshal(sampleMediaSourceTable)
+	if err != nil {
+		fmt.Fprintf(w, "couldnot create json\n")
+	} else {
+		fmt.Fprintf(w, string(m))
+	}
 }
